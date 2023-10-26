@@ -1,9 +1,11 @@
 import pandas as pd
 
-path= "C:\\araujo\\araujo_csv.csv"
+path= "C:\\araujo\\araujo.XLSX"
 nomes_colunas = ['CHAPA', 'NOME', 'VALOR', 'NROVIAGENS', 'CODSITUACAO', 'DESCRICAO']
+contador_funcionario_limite = 0
+contador_funcionario_normal = 0
 def ler_arquivo(path):
-    df = pd.read_csv(path, sep=";")
+    df = pd.read_excel(path)
     return df
 
 def busca_funcionario(matricula):
@@ -13,18 +15,14 @@ def busca_funcionario(matricula):
 
 if __name__ == "__main__":
     df = ler_arquivo(path)
-    # print(df)
-    # print(df.columns)
-    chapa_anterior = ""
     df_nao_duplicada = df.drop_duplicates('CHAPA')
     tam_df = len(df_nao_duplicada)
+
     for i in range(tam_df):
         qtde = 0
-
-
         if 0 <= i < len(df_nao_duplicada):
             chapa = df_nao_duplicada['CHAPA'].iloc[i]
-        funcionario_buscado = df.query(f'CHAPA=="{chapa}"')
+            funcionario_buscado = df.query(f'CHAPA=="{chapa}"')
 
         tam = len(funcionario_buscado)
 
@@ -35,15 +33,20 @@ if __name__ == "__main__":
 
         nmr_viagens_diaria = funcionario_buscado['NROVIAGENS'].iloc[0]
         preco_passagem = funcionario_buscado['VALOR'].iloc[0]
-        preco_passagem = preco_passagem.replace(',', '.')
+        # preco_passagem = preco_passagem.replace(',', '.')
         preco = float(preco_passagem)
         dias_trabalhados = 26
         total_num_viagem = qtde * dias_trabalhados
-        limite_valor_mes = 350.00
-        total_gasto_mes = total_num_viagem * preco
+        limite_valor_mes = 100.00
+        total_gasto_mes = total_num_viagem * preco_passagem
         if total_gasto_mes > limite_valor_mes:
-            print(f'VALOR LIMITE: R$ {limite_valor_mes}')
-            print(f'VALOR GASTO POR FUNCIONÁRIO: R$ {format(total_gasto_mes, ".2f")}')
-            print(f'O limite do valor gasto por mês foi ultrapassado, portanto, funcionário(a) {nome_funcionario} é recomendando mudar de loja!')
+            # print(f'VALOR LIMITE: R$ {limite_valor_mes}')
+            # print(f'VALOR GASTO POR FUNCIONÁRIO: R$ {format(total_gasto_mes, ".2f")}')
+            # print(f'O limite do valor gasto por mês foi ultrapassado, portanto, funcionário(a) {nome_funcionario} é recomendando mudar de loja!')
+            contador_funcionario_limite += 1
         else:
-            print(f'O limite não foi ultrapassado, portanto, funcionário(a) {nome_funcionario} não precisará mudar de loja!')
+            # print(f'O limite não foi ultrapassado, portanto, funcionário(a) {nome_funcionario} não precisará mudar de loja!')
+            contador_funcionario_normal += 1
+    print(f'Limite em R${limite_valor_mes} no prazo de {dias_trabalhados} dias')
+    print(f'Total de funcionários com limite excedido {contador_funcionario_limite}')
+    print(f'Total de funcionários sem o limite excedido {contador_funcionario_normal}')
