@@ -15,13 +15,17 @@ if __name__ == "__main__":
     df = ler_arquivo(path)
     # print(df)
     # print(df.columns)
-
-    for i in range(len(df)):
+    chapa_anterior = ""
+    df_nao_duplicada = df.drop_duplicates('CHAPA')
+    tam_df = len(df_nao_duplicada)
+    for i in range(tam_df):
         qtde = 0
-        df_nao_duplicada = df.drop_duplicates('CHAPA')
+
+
         if 0 <= i < len(df_nao_duplicada):
             chapa = df_nao_duplicada['CHAPA'].iloc[i]
         funcionario_buscado = df.query(f'CHAPA=="{chapa}"')
+
         tam = len(funcionario_buscado)
 
         for i in range(tam):
