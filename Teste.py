@@ -2,18 +2,30 @@ import pandas as pd
 
 path= "C:\\araujo\\araujo.XLSX"
 nomes_colunas = ['CHAPA', 'NOME', 'VALOR', 'NROVIAGENS', 'CODSITUACAO', 'DESCRICAO']
-contador_funcionario_limite = 0
-contador_funcionario_normal = 0
+# contador_funcionario_limite = 0
+# contador_funcionario_normal = 0
 def ler_arquivo(path):
     df = pd.read_excel(path)
     return df
-
+def menu():
+    caminho = input('Digite o caminho do arquivo: [C:\\pasta_exemplo\\arquivo_exemplo.xlsm]\n')
+    opc = input(
+                '\nDigite sua opção:'
+                '\n1-CALCULAR PASSAGEM'
+                '\n2-CALCULA QUANTIDADE FUNCIONÁRIO COM LIMITE EXCEDIDO OU NORMAL'
+                '\n3-CALCULA N° VIAGEM'
+                '\n4-CALCULA VALOR GASTO'
+                '\n5-SAIR\n'
+                )
 def busca_funcionario(matricula):
     df = ler_arquivo(path)
     funcionario_buscado = df.query(f'CHAPA=="{matricula}"')
     return funcionario_buscado
 
-if __name__ == "__main__":
+def consulta_df():
+    contador_funcionario_limite = 0
+    contador_funcionario_normal = 0
+
     df = ler_arquivo(path)
     df_nao_duplicada = df.drop_duplicates('CHAPA')
     tam_df = len(df_nao_duplicada)
@@ -47,6 +59,6 @@ if __name__ == "__main__":
         else:
             # print(f'O limite não foi ultrapassado, portanto, funcionário(a) {nome_funcionario} não precisará mudar de loja!')
             contador_funcionario_normal += 1
-    print(f'Limite em R${limite_valor_mes} no prazo de {dias_trabalhados} dias')
-    print(f'Total de funcionários com limite excedido {contador_funcionario_limite}')
-    print(f'Total de funcionários sem o limite excedido {contador_funcionario_normal}')
+
+if __name__ == "__main__":
+    menu()
