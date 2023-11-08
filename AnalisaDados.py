@@ -15,35 +15,42 @@ def busca_funcionario(matricula):
 def consulta_df():
     contador_funcionario_limite = 0
     contador_funcionario_normal = 0
-
     df = ler_arquivo(path)
+
+    # REMOVE DUPLICIDADE DE ACORDO COM PARAMETRO CHAPA
     df_nao_duplicada = df.drop_duplicates('CHAPA')
     tam_df = len(df_nao_duplicada)
 
-    for i in range(5):
-        qtde = 0
-        if 0 <= i < len(df_nao_duplicada):
-            chapa = df_nao_duplicada['CHAPA'].iloc[i]
+    for j in range(tam_df):
+        nr_viagens = 0
+        total_passagem = 0.0
+        if 0 <= j < len(df_nao_duplicada):
+            chapa = df_nao_duplicada['CHAPA'].iloc[j]
             funcionario_buscado = df.query(f'CHAPA=="{chapa}"')
 
         tam = len(funcionario_buscado)
 
+        # SOMA QUANTIDADE DE NUMERO DE VIAGENS DIARIA POR FUNCIONARIO
         for i in range(tam):
-            casting = funcionario_buscado.query('NROVIAGENS!="0"')["NROVIAGENS"].mean()
-            qtde = qtde + casting
+            casting = funcionario_buscado['NROVIAGENS'].iloc[i]
+            nr_viagens = nr_viagens + casting
         nome_funcionario = funcionario_buscado['NOME'].iloc[0]
 
-        nmr_viagens_diaria = funcionario_buscado['NROVIAGENS'].iloc[0]
-        preco_passagem = funcionario_buscado['VALOR'].iloc[0]
-        # preco_passagem = preco_passagem.replace(',', '.')
-        preco = float(preco_passagem)
+
+        # ITERA SOBRE O FUNCIONARIO BUSCADO E SOMA O VALOR DAS PASSAGENS DE ACORDO COM A QUANTIDADE QUE CONTEM NO DATA-FRAME(FUNCIONARIO BUSCADO)
+        for x in range(tam):
+            vlr_passagem = funcionario_buscado["VALOR"].iloc[x]
+            total_passagem = total_passagem + vlr_passagem
+
         dias_trabalhados = 26
-        total_num_viagem = qtde * dias_trabalhados
+        total_num_viagem = nr_viagens * dias_trabalhados
         limite_valor_mes = 100.00
-        total_gasto_mes = total_num_viagem * preco_passagem
-        if total_gasto_mes > limite_valor_mes:
+        total_gasto = total_num_viagem * total_passagem
+
+        limite_extrapolado = total_gasto > limite_valor_mes
+        if limite_extrapolado:
             print(f'VALOR LIMITE: R$ {limite_valor_mes}')
-            print(f'VALOR GASTO POR FUNCIONÁRIO: R$ {format(total_gasto_mes, ".2f")}')
+            print(f'VALOR GASTO POR FUNCIONÁRIO: R$ {format(total_gasto, ".2f")}')
             print(f'O limite do valor gasto por mês foi ultrapassado, portanto, funcionário(a) {nome_funcionario} é recomendando mudar de loja!')
             contador_funcionario_limite += 1
         else:
