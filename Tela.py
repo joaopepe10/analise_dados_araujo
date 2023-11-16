@@ -1,7 +1,6 @@
 import tkinter
 from tkinter import *
 from tkinter import ttk
-from tkinter import tix
 from tkinter import PhotoImage, RIGHT
 from PIL import Image, ImageTk
 import AnalisaDados as ad
