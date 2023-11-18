@@ -1,7 +1,7 @@
 import pandas as pd
 
-path= "C:\\araujo\\araujo.XLSX"
-nomes_colunas = ['CHAPA', 'NOME', 'VALOR', 'NROVIAGENS', 'CODSITUACAO', 'DESCRICAO']
+path="C:\\araujo\\araujo.XLSX"
+nomes_colunas=['CHAPA', 'NOME', 'VALOR', 'NROVIAGENS', 'CODSITUACAO', 'DESCRICAO']
 # contador_funcionario_limite = 0
 # contador_funcionario_normal = 0
 def ler_arquivo(path):
@@ -20,8 +20,10 @@ def consulta_df():
     # REMOVE DUPLICIDADE DE ACORDO COM PARAMETRO CHAPA
     df_nao_duplicada = df.drop_duplicates('CHAPA')
     tam_df = len(df_nao_duplicada)
-
-    for j in range(tam_df):
+    novo_df = pd.DataFrame(columns=["CHAPA", "NOME", "VALOR", "VIAGENS"])
+    df_limite_extrapolado = pd.DataFrame(columns=["CHAPA", "NOME", "VALOR", "VIAGENS"])
+    indice = 0
+    for j, row in enumerate(df_nao_duplicada.iterrows()):
         nr_viagens = 0
         total_passagem = 0.0
         if 0 <= j < len(df_nao_duplicada):
@@ -49,13 +51,12 @@ def consulta_df():
 
         limite_extrapolado = total_gasto > limite_valor_mes
         if limite_extrapolado:
-            print(f'VALOR LIMITE: R$ {limite_valor_mes}')
-            print(f'VALOR GASTO POR FUNCIONÁRIO: R$ {format(total_gasto, ".2f")}')
-            print(f'O limite do valor gasto por mês foi ultrapassado, portanto, funcionário(a) {nome_funcionario} é recomendando mudar de loja!')
-            contador_funcionario_limite += 1
-        else:
-            print(f'O limite não foi ultrapassado, portanto, funcionário(a) {nome_funcionario} não precisará mudar de loja!')
-            contador_funcionario_normal += 1
+            print(row)
+            indice = indice + 1
+
+
+    # print(novo_df)
+
 
 if __name__ == "__main__":
     ler_arquivo(path)

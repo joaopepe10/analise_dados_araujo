@@ -1,16 +1,19 @@
 import pandas as pd
 
-path= "C:\\araujo\\araujo_csv.csv"
+path = "C:\\araujo\\araujo_csv.csv"
 nomes_colunas = ['CHAPA', 'NOME', 'VALOR', 'NROVIAGENS', 'CODSITUACAO', 'DESCRICAO']
+
 
 def ler_arquivo(path):
     df = pd.read_csv(path, sep=";")
     return df
 
+
 def busca_funcionario(matricula):
     df = ler_arquivo(path)
     funcionario_buscado = df.query(f'CHAPA=="{matricula}"')
     return funcionario_buscado
+
 
 def valida_funcionario_limite():
     contador_funcionario_limite = 0
@@ -45,6 +48,7 @@ def valida_funcionario_limite():
 
     return contador_funcionario_limite
 
+
 def valida_funcionario_normal():
     contador_funcionario_normal = 0
 
@@ -76,6 +80,7 @@ def valida_funcionario_normal():
         if total_gasto_mes < limite_valor_mes:
             contador_funcionario_normal += 1
     return contador_funcionario_normal
+
 
 if __name__ == "__main__":
     print(valida_funcionario_limite())
